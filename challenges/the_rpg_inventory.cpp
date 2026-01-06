@@ -7,6 +7,14 @@ struct Item
     std::string name;
     int cost;
     int weight;
+
+    // adding member functions
+    void display()
+    {
+        std::cout << "---" << name << "---" << std::endl;
+        std::cout << "Cost: " << cost << " Gold" << std::endl;
+        std::cout << "Weight: " << weight << "kg" << std::endl;
+    }
 };
 
 int main()
@@ -29,6 +37,10 @@ int main()
     }
     std::cout << "Most Expensive Item: " << mostExpensive.name << std::endl;
     std::cout << "Cost: " << mostExpensive.cost << std::endl;
+
+    // display sword
+    Item sword = {"Sword", 100, 5};
+    sword.display();
 
     return 0;
 }
