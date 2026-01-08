@@ -4,10 +4,15 @@ class Shape
 {
 
     // as soon as class has one pure virtual function:
-                // It becomes abstract
-                // Any child MUST override that function
+    //              Any child MUST override that function
+    //              It becomes abstract
 public:
     virtual double getArea() = 0;
+
+    // THE SAFETY NET
+    // This ensures that when you 'delete shapePtr', 
+    // it calls ~Circle() or ~Rectangle() first!
+    virtual ~Shape() {}
 };
 
 class Circle : public Shape
