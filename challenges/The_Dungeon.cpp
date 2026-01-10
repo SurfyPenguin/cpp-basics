@@ -2,8 +2,6 @@
 #include <ctime>
 #include <cstdlib>
 
-const int MAX_HP = 100;
-
 class Creature
 {
 protected:
@@ -34,9 +32,9 @@ public:
     Creature(std::string name, int hp, int damage)
     {
         this->name = name;
-        this->hp = setValueInRange(hp, 0, MAX_HP);
+        this->hp = setValueInRange(hp, 0, 100);
         this->totalHp = this->hp;
-        this->damage = setValueInRange(damage, 0, MAX_HP);
+        this->damage = setValueInRange(damage, 0, 20);
     }
 
     bool isAlive()
@@ -57,7 +55,7 @@ public:
     void takeDamage(int dmg)
     {
         int hpAfterDamage = this->hp - dmg;
-        this->hp = setValueInRange(hpAfterDamage, 0, MAX_HP);
+        this->hp = setValueInRange(hpAfterDamage, 0, this->totalHp);
     }
 
     virtual void attack(Creature& target) = 0;
@@ -124,7 +122,65 @@ public:
 int main()
 {
     srand(time(0)); // Seed the random number generator
-    Player hero("Hero", 100, 15);
+    Player hero("Hero", 100, 20);
+
+    while (hero.isAlive())
+    {
+        // Init enemy pointer
+        Creature* enemy;
+
+        // Generate random enemy
+        if (rand() % 2)
+        {
+            // goblin
+            enemy = new Goblin("Cindra", 100, 15);
+        }
+        else
+        {
+            // boss
+            enemy = new Boss("Dragon", 200, 20);
+        }
+
+        // run until one of them dies
+        while (hero.isAlive() && enemy->isAlive())
+        {
+            char option;
+            std::cout << "\nHero: " << hero.getHealth() << " HP | " << enemy->getName() << ": " << enemy->getHealth() << " HP";
+
+            std::cout << "\n(a)ttack or (h)eal? (a/h): ";
+            std::cin >> option;
+
+            std::cout << "\n";
+            if (option == 'a')
+            {
+                hero.attack(*enemy);
+                enemy->attack(hero);
+            }
+            else if (option == 'h')
+            {
+                hero.heal();
+                enemy->attack(hero);
+            }
+            else 
+            {
+                std::cout << "Invalid Option!\n";
+            }
+        }
+
+        // after while loop exits
+        if (!hero.isAlive())
+        {
+            std::cout << "You DIED!\n";
+            break;
+        }
+        
+        if (!enemy->isAlive())
+        {
+            std::cout << "You killed " << enemy->getName() << "!!\n";
+        }
+
+        delete enemy;
+    }
     
     return 0;
 }
